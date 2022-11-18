@@ -26,7 +26,7 @@ namespace LibraryAppRestapi.Repository
 
         public Book GetBook(string name)
         {
-            return _context.Books.Where(p => p.Title == name).FirstOrDefault();
+            return _context.Books.Where(p => p.Title.Trim().ToUpper().Equals( name.Trim().ToUpper())).FirstOrDefault();
         }
 
 

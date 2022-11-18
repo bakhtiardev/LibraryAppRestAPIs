@@ -48,6 +48,20 @@ namespace LibraryAppRestapi.Controllers
 
             return Ok(book);
         }
+        [HttpGet("title")]
+        public IActionResult GetBookByTitle([FromQuery]string title)
+        {
+           
+
+            var book = _mapper.Map<BookDto>(_bookRepository.GetBook(title));
+
+            if (book == null || title == "" || title==null)
+                return NotFound();
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            return Ok(book);
+        }
 
         //[HttpGet("{pokeId}/rating")]
         //[ProducesResponseType(200, Type = typeof(decimal))]
