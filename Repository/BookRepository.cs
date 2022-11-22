@@ -19,6 +19,34 @@ namespace LibraryAppRestapi.Repository
             return _context.Books.Any(p=>p.Id==bookId); 
         }
 
+        public bool CreateBook(int authorId, int studentId,Book book)
+        {
+            var authorEntity = _context.Authors.Where(p => p.Id == authorId).FirstOrDefault();
+            var studentEntity = _context.Students.Where(c=>c.Id==studentId).FirstOrDefault();
+            //var pubEntity = _context.Publishers.Where(x=>x.Id==pubId).FirstOrDefault();
+
+
+            var bookAuth = new BookAuthor()
+            {
+                Author = authorEntity,
+                Book = book,
+            };
+            _context.Add(bookAuth);
+
+            var bookStudent = new IssueRecord()
+            {
+                Student = studentEntity,
+                Book = book,
+            };
+            
+            _context.Add(bookStudent);
+
+            _context.Add(book);
+
+            return Save();
+
+        }
+
         public Book GetBook(int id)
         {
             return _context.Books.Where(p => p.Id == id).FirstOrDefault();

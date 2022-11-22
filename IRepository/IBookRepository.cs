@@ -11,7 +11,7 @@ namespace LibraryAppRestapi.IRepository
         Book GetBookTrimToUpper(BookDto BookCreate);
         //decimal GetBookRating(int bookId);
         bool BookExists(int bookId);
-        //bool CreateBook(int ownerId, int categoryId, Book Book);
+        bool CreateBook(int authorId, int studentId,Book Book);
         //bool UpdateBook(int ownerId, int categoryId, Book Book);
         //bool DeleteBook(Book Book);
         bool Save();

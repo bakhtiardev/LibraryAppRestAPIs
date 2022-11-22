@@ -11,13 +11,13 @@ namespace LibraryAppRestapi.Controllers
     public class BookController : Controller
     {
         private readonly IBookRepository _bookRepository;
-        //private readonly IReviewRepository _reviewRepository;
+        private readonly IPublisherRepository _publisherRepository;
         private readonly IMapper _mapper;
 
-        public BookController(IBookRepository bookRepository,IMapper mapper)
+        public BookController(IBookRepository bookRepository, IPublisherRepository publisherRepository, IMapper mapper)
         {
             _bookRepository = bookRepository;
-            //_reviewRepository = reviewRepository;
+            _publisherRepository = publisherRepository;
             _mapper = mapper;
         }
 
@@ -79,36 +79,36 @@ namespace LibraryAppRestapi.Controllers
         //    return Ok(rating);
         //}
 
-        //[HttpPost]
-        //[ProducesResponseType(204)]
-        //[ProducesResponseType(400)]
-        //public IActionResult CreatePokemon([FromQuery] int ownerId, [FromQuery] int catId, [FromBody] PokemonDto pokemonCreate)
-        //{
-        //    if (pokemonCreate == null)
-        //        return BadRequest(ModelState);
+        [HttpPost]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        public IActionResult CreateBook([FromQuery] int authorId, [FromQuery] int studentId, [FromQuery] int pubId,[FromBody] BookDto bookCreate)
+        {
+            if (bookCreate == null)
+                return BadRequest(ModelState);
 
-        //    var pokemons = _pokemonRepository.GetPokemonTrimToUpper(pokemonCreate);
+            var books = _bookRepository.GetBookTrimToUpper(bookCreate);
 
-        //    if (pokemons != null)
-        //    {
-        //        ModelState.AddModelError("", "Owner already exists");
-        //        return StatusCode(422, ModelState);
-        //    }
+            if (books != null)
+            {
+                ModelState.AddModelError("", "Owner already exists");
+                return StatusCode(422, ModelState);
+            }
 
-        //    if (!ModelState.IsValid)
-        //        return BadRequest(ModelState);
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
-        //    var pokemonMap = _mapper.Map<Pokemon>(pokemonCreate);
+            var bookMap = _mapper.Map<Book>(bookCreate);
+            bookMap.Publisher = _publisherRepository.GetPublisher(pubId);
 
+            if (!_bookRepository.CreateBook(authorId,studentId,bookMap))
+            {
+                ModelState.AddModelError("", "Something went wrong while savin");
+                return StatusCode(500, ModelState);
+            }
 
-        //    if (!_pokemonRepository.CreatePokemon(ownerId, catId, pokemonMap))
-        //    {
-        //        ModelState.AddModelError("", "Something went wrong while savin");
-        //        return StatusCode(500, ModelState);
-        //    }
-
-        //    return Ok("Successfully created");
-        //}
+            return Ok("Successfully created");
+        }
 
         //[HttpPut("{pokeId}")]
         //[ProducesResponseType(400)]

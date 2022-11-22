@@ -8,6 +8,11 @@ namespace LibraryAppRestapi.IRepository
         ICollection<Student> GetStudents();
         Student GetStudent(int id);
         Student GetStudent(string name);
+        ICollection<Student> GetStudentsByBook(int bookId);
+        ICollection<Book> GetBooksByStudent(int studentId);
+        bool StudentExists(int studentId);
+        bool CreateStudent(int bookId, Student student);
+        bool Save();
        
     }
 }
