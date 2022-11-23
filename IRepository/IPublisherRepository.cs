@@ -11,6 +11,8 @@ namespace LibraryAppRestapi.IRepository
         ICollection<Book> GetBooksByPublisher(int pubId);
         bool PublisherExists(int pubId);
         bool CreatePublisher(Publisher publisher);
+        bool UpdatePublisher(Publisher publisher);
+        bool DeletePublisher(Publisher pubId);
         bool Save();
     }
 }

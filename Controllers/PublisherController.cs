@@ -12,10 +12,12 @@ namespace LibraryAppRestapi.Controllers
     public class PublisherController: Controller
     {
         private readonly IPublisherRepository _publisherRepository;
+        private readonly IBookRepository _bookRepository;
         private IMapper _mapper;
-        public PublisherController(IPublisherRepository publisherRepository, IMapper mapper)
+        public PublisherController(IPublisherRepository publisherRepository,IBookRepository bookRepository, IMapper mapper)
         {
             _publisherRepository = publisherRepository;
+            _bookRepository = bookRepository;
             _mapper = mapper;
         }
         [HttpGet]
@@ -97,6 +99,60 @@ namespace LibraryAppRestapi.Controllers
             }
 
             return Ok("Successfuly created");
+        }
+
+
+        [HttpPut("{publisherId}")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public IActionResult UpdatePublisher(int publisherId, [FromBody] PublisherDto updatePublisher)
+        {
+            if (updatePublisher == null)
+                return BadRequest(ModelState);
+
+            if (publisherId != updatePublisher.Id)
+                return BadRequest(ModelState);
+
+            if (!_publisherRepository.PublisherExists(publisherId))
+                return NotFound();
+
+            var mapUpdate = _mapper.Map<Publisher>(updatePublisher);
+
+            if (!_publisherRepository.UpdatePublisher(mapUpdate))
+            {
+                ModelState.AddModelError("", "somthing went wrong");
+                return StatusCode(500, ModelState);
+
+            }
+            return Ok("Update Successful");
+
+        }
+        [HttpDelete("{pubId}")]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(404)]
+        public IActionResult DeletePublisher(int pubId)
+        {
+            if (!_publisherRepository.PublisherExists(pubId))
+            {
+                return NotFound();
+            }
+
+          
+            var pubToDelete = _publisherRepository.GetPublisher(pubId);
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+
+
+            if (!_publisherRepository.DeletePublisher(pubToDelete))
+            {
+                ModelState.AddModelError("", "Something went wrong deleting publisher");
+            }
+
+            return Ok("Delete successful");
         }
     }
 }

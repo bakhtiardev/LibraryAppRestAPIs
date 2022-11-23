@@ -9,7 +9,9 @@ namespace LibraryAppRestapi.IRepository
 
         ICollection<Book> GetBookByAuhtor(int auhorId);
 
-        bool CreateAuthor(int bookId, Author author);
+        bool CreateAuthor(int bookId,Author author);
+        bool UpdateAuthor(Author author);
+        bool DeleteAuthor(Author author);
         bool AuhorExists(int id);
         bool Save();
     }

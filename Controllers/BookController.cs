@@ -110,65 +110,62 @@ namespace LibraryAppRestapi.Controllers
             return Ok("Successfully created");
         }
 
-        //[HttpPut("{pokeId}")]
-        //[ProducesResponseType(400)]
-        //[ProducesResponseType(204)]
-        //[ProducesResponseType(404)]
-        //public IActionResult UpdatePokemon(int pokeId,
-        //    [FromQuery] int ownerId, [FromQuery] int catId,
-        //    [FromBody] PokemonDto updatedPokemon)
-        //{
-        //    if (updatedPokemon == null)
-        //        return BadRequest(ModelState);
+        [HttpPut("{bookId}")]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(404)]
+        public IActionResult UpdateBook(int bookId,
+            [FromQuery] int authorId, [FromQuery] int studentId,
+            [FromBody] BookDto updatedBook)
+        {
+            if (updatedBook == null)
+                return BadRequest(ModelState);
 
-        //    if (pokeId != updatedPokemon.Id)
-        //        return BadRequest(ModelState);
+            if (bookId != updatedBook.Id)
+                return BadRequest(ModelState);
 
-        //    if (!_pokemonRepository.PokemonExists(pokeId))
-        //        return NotFound();
+            if (!_bookRepository.BookExists(bookId))
+                return NotFound();
 
-        //    if (!ModelState.IsValid)
-        //        return BadRequest();
+            if (!ModelState.IsValid)
+                return BadRequest();
 
-        //    var pokemonMap = _mapper.Map<Pokemon>(updatedPokemon);
+            var bookMap = _mapper.Map<Book>(updatedBook);
 
-        //    if (!_pokemonRepository.UpdatePokemon(ownerId, catId, pokemonMap))
-        //    {
-        //        ModelState.AddModelError("", "Something went wrong updating owner");
-        //        return StatusCode(500, ModelState);
-        //    }
+            if (!_bookRepository.UpdateBook(authorId, studentId, bookMap))
+            {
+                ModelState.AddModelError("", "Something went wrong updating owner");
+                return StatusCode(500, ModelState);
+            }
 
-        //    return NoContent();
-        //}
+            return Ok("Update successful");
+        }
 
-        //[HttpDelete("{pokeId}")]
-        //[ProducesResponseType(400)]
-        //[ProducesResponseType(204)]
-        //[ProducesResponseType(404)]
-        //public IActionResult DeleteBook(int bookId)
-        //{
-        //    if (!_bookRepository.BookExists(bookId))
-        //    {
-        //        return NotFound();
-        //    }
+        [HttpDelete("{bookId}")]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(404)]
+        public IActionResult DeleteBook(int bookId)
+        {
+            if (!_bookRepository.BookExists(bookId))
+            {
+                return NotFound();
+            }
 
-        //    var reviewsToDelete = _reviewRepository.GetReviewsOfAPokemon(pokeId);
-        //    var pokemonToDelete = _pokemonRepository.GetPokemon(pokeId);
+          
+            var bookToDelte = _bookRepository.GetBook(bookId);
 
-        //    if (!ModelState.IsValid)
-        //        return BadRequest(ModelState);
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
-        //    if (!_reviewRepository.DeleteReviews(reviewsToDelete.ToList()))
-        //    {
-        //        ModelState.AddModelError("", "Something went wrong when deleting reviews");
-        //    }
+           
 
-        //    if (!_pokemonRepository.DeletePokemon(pokemonToDelete))
-        //    {
-        //        ModelState.AddModelError("", "Something went wrong deleting owner");
-        //    }
+            if (!_bookRepository.DeleteBook(bookToDelte))
+            {
+                ModelState.AddModelError("", "Something went wrong deleting book");
+            }
 
-        //    return NoContent();
-        //}
+            return Ok("Delete successful");
+        }
     }
 }

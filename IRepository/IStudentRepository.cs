@@ -12,6 +12,8 @@ namespace LibraryAppRestapi.IRepository
         ICollection<Book> GetBooksByStudent(int studentId);
         bool StudentExists(int studentId);
         bool CreateStudent(int bookId, Student student);
+        bool UpdateStudent(int bookId, Student student);
+        bool DeleteStudent(Student student);
         bool Save();
        
     }

@@ -31,8 +31,8 @@ namespace LibraryAppRestapi
                             {
                                 new IssueRecord
                                 {
-                                    IssueDate = new DateTime(2022, 1, 1),
-                                    ReturnDate = new DateTime(2022,5,5),
+                                    IssueDate = DateTime.Now.Date,
+                                    ReturnDate = DateTime.Now.Date,
                                     Student = new Student()
                                     {
                                         Name="Bakhtiar",
@@ -41,8 +41,8 @@ namespace LibraryAppRestapi
                                 },
                                 new IssueRecord
                                 {
-                                     IssueDate = new DateTime(2022, 2, 1),
-                                    ReturnDate = new DateTime(2022,5,9),
+                                    IssueDate = DateTime.Now.Date,
+                                    ReturnDate = DateTime.Now.Date,
                                     Student= new Student()
                                     {
                                         Name="Hussain",

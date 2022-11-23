@@ -46,6 +46,11 @@ namespace LibraryAppRestapi.Repository
             return Save();
 
         }
+        public bool UpdateBook(int authId, int studentId, Book book)
+        {
+            _context.Update(book);
+            return Save();
+        }
 
         public Book GetBook(int id)
         {
@@ -72,6 +77,12 @@ namespace LibraryAppRestapi.Repository
         {
            var saved = _context.SaveChanges();
             return saved > 0 ? true : false;
+        }
+
+        public bool DeleteBook(Book Book)
+        {
+           _context.Remove(Book);
+            return Save();
         }
     }
 }

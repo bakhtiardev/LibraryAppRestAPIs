@@ -18,7 +18,7 @@ namespace LibraryAppRestapi.Repository
 
         public bool CreateAuthor(int bookId, Author author)
         {
-            var bookEntity = _context.Books.Where(p=>p.Id== bookId).FirstOrDefault();
+            var bookEntity = _context.Books.Where(p => p.Id == bookId).FirstOrDefault();
 
             var bookAuth = new BookAuthor()
             {
@@ -29,7 +29,11 @@ namespace LibraryAppRestapi.Repository
             _context.Add(author);
             return Save();
         }
-
+        public bool UpdateAuthor(Author updateAuthor)
+        {
+            _context.Update(updateAuthor);
+            return Save();
+        }
         public Author GetAuthor(int id)
         {
             return _context.Authors.Where(p => p.Id == id).FirstOrDefault();
@@ -48,6 +52,12 @@ namespace LibraryAppRestapi.Repository
         {
             var saved = _context.SaveChanges();
             return saved > 0 ? true : false;
+        }
+
+        public bool DeleteAuthor(Author author)
+        {
+            _context.Remove(author);
+            return Save();
         }
     }
 }

@@ -46,22 +46,33 @@ namespace LibraryAppRestapi.Repository
             var bookEntity=_context.Books.Where(p=>p.Id==bookId).FirstOrDefault();
             var studentBook = new IssueRecord()
             {
-
+                IssueDate = DateTime.Now,
                 Book = bookEntity,
                 Student = student,
 
             };
 
             _context.Add(studentBook);
-            _context.Add(bookEntity);
+            _context.Add(student);
 
             return Save();
         }
-
+        public bool UpdateStudent(int bookId, Student updateStudent)
+        {
+          
+            _context.Update(updateStudent);
+            return Save();
+        }
         public bool Save()
         {
             var save = _context.SaveChanges();
             return save > 0 ? true: false;
+        }
+
+        public bool DeleteStudent(Student student)
+        {
+            _context.Remove(student);
+            return Save();
         }
     }
 }

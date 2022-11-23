@@ -18,6 +18,11 @@ namespace LibraryAppRestapi.Repository
             _context.Add(publisher);
             return Save();
         }
+        public bool UpdatePublisher(Publisher publisher)
+        {
+            _context.Update(publisher);
+            return Save();
+        }
 
         public ICollection<Book> GetBooksByPublisher(int pubId)
         {
@@ -48,6 +53,12 @@ namespace LibraryAppRestapi.Repository
         {
             var save = _context.SaveChanges();
             return save > 0 ? true : false;
+        }
+
+        public bool DeletePublisher(Publisher publisher)
+        {
+            _context.Remove(publisher);
+            return Save();
         }
     }
 }
