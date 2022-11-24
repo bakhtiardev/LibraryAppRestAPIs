@@ -25,10 +25,11 @@ namespace LibraryAppRestapi.Controllers
         [ProducesResponseType(200, Type = typeof(IEnumerable<Student>))]
         public IActionResult GetStudents()
         {
-            var students = _mapper.Map<List<StudentDto>>(_studentRepository.GetStudents());
-
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
+            var students = _mapper.Map<List<StudentDto>>(_studentRepository.GetStudents());
+
+           
 
             return Ok(students);
         }
@@ -40,12 +41,12 @@ namespace LibraryAppRestapi.Controllers
         {
             if (!_studentRepository.StudentExists(studentId))
                 return NotFound();
-
-            var book = _mapper.Map<StudentDto>(_studentRepository.GetStudent(studentId));
-
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
+            var book = _mapper.Map<StudentDto>(_studentRepository.GetStudent(studentId));
+
+           
             return Ok(book);
         }
         [HttpGet("student/{bookId}")]
@@ -53,12 +54,12 @@ namespace LibraryAppRestapi.Controllers
         [ProducesResponseType(400)]
         public IActionResult GetStudentByBookId(int bookId)
         {
-
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
             var student = _mapper.Map<List<StudentDto>>(_studentRepository.GetStudentsByBook(bookId));
 
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+            
 
             return Ok(student);
         }
@@ -67,9 +68,10 @@ namespace LibraryAppRestapi.Controllers
         [ProducesResponseType(400)]
         public IActionResult GetBooksByStudentId(int studentId)
         {
-            var books = _mapper.Map<List<BookDto>>(_studentRepository.GetBooksByStudent(studentId));
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
+            var books = _mapper.Map<List<BookDto>>(_studentRepository.GetBooksByStudent(studentId));
+          
 
             return Ok(books);
         }
@@ -140,11 +142,11 @@ namespace LibraryAppRestapi.Controllers
                 return NotFound();
             }
 
-
-            var studentToDelte = _studentRepository.GetStudent(studentId);
-
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
+            var studentToDelte = _studentRepository.GetStudent(studentId);
+
+          
 
 
 

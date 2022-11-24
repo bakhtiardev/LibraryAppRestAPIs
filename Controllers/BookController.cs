@@ -25,10 +25,11 @@ namespace LibraryAppRestapi.Controllers
         [ProducesResponseType(200, Type = typeof(IEnumerable<Book>))]
         public IActionResult GetBooks()
         {
-            var books = _mapper.Map<List<BookDto>>(_bookRepository.GetBooks());
-
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
+            var books = _mapper.Map<List<BookDto>>(_bookRepository.GetBooks());
+
+           
 
             return Ok(books);
         }
@@ -40,11 +41,11 @@ namespace LibraryAppRestapi.Controllers
         {
             if (!_bookRepository.BookExists(bookId))
                 return NotFound();
-
-            var book = _mapper.Map<BookDto>(_bookRepository.GetBook(bookId));
-
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
+            var book = _mapper.Map<BookDto>(_bookRepository.GetBook(bookId));
+
+          
 
             return Ok(book);
         }
@@ -52,13 +53,13 @@ namespace LibraryAppRestapi.Controllers
         public IActionResult GetBookByTitle([FromQuery]string title)
         {
            
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
             var book = _mapper.Map<BookDto>(_bookRepository.GetBook(title));
 
-            if (book == null || title == "" || title==null)
+            if (book == null || title == "" || title == null)
                 return NotFound();
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
 
             return Ok(book);
         }
@@ -87,6 +88,9 @@ namespace LibraryAppRestapi.Controllers
             if (bookCreate == null)
                 return BadRequest(ModelState);
 
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
             var books = _bookRepository.GetBookTrimToUpper(bookCreate);
 
             if (books != null)
@@ -95,8 +99,6 @@ namespace LibraryAppRestapi.Controllers
                 return StatusCode(422, ModelState);
             }
 
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
 
             var bookMap = _mapper.Map<Book>(bookCreate);
             bookMap.Publisher = _publisherRepository.GetPublisher(pubId);
@@ -151,13 +153,13 @@ namespace LibraryAppRestapi.Controllers
             {
                 return NotFound();
             }
-
-          
-            var bookToDelte = _bookRepository.GetBook(bookId);
-
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
+
+            var bookToDelte = _bookRepository.GetBook(bookId);
+
+            
            
 
             if (!_bookRepository.DeleteBook(bookToDelte))

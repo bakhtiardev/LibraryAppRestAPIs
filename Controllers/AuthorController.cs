@@ -28,10 +28,11 @@ namespace LibraryAppRestapi.Controllers
         [ProducesResponseType(200, Type = typeof(IEnumerable<Author>))]
         public IActionResult GetAuthors()
         {
-            var authors = _mapper.Map<List<AuthorDto>>(_authorRepository.GetAuthors());
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
+            var authors = _mapper.Map<List<AuthorDto>>(_authorRepository.GetAuthors());
+
 
             return Ok(authors);
         }
@@ -60,12 +61,12 @@ namespace LibraryAppRestapi.Controllers
         [ProducesResponseType(400)]
         public IActionResult GetBookByAuthorId(int authorId)
         {
-
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
             var books = _mapper.Map<List<BookDto>>(_authorRepository.GetBookByAuhtor(authorId));
 
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+           
 
             return Ok(books);
         }

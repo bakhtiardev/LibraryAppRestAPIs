@@ -126,16 +126,18 @@ namespace LibraryAppRestapi.Controllers
         [ProducesResponseType(404)]
         public IActionResult DeleteIssueRecord(int issueId)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
             if (!_issueRecordRepository.IssueRecordExists(issueId))
             {
                 return NotFound();
             }
+        
 
             var ownerToDelete = _issueRecordRepository.GetIssueRecord(issueId);
 
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
+           
             if (!_issueRecordRepository.DeleteIssueRecord(ownerToDelete))
             {
                 ModelState.AddModelError("", "Something went wrong deleting issueRecord");

@@ -14,6 +14,7 @@ namespace LibraryAppRestapi.Helper
             CreateMap<Student,StudentDto>();
             CreateMap<Publisher,PublisherDto>();
             CreateMap<IssueRecord, IssueRecordDto>();
+            CreateMap<User, UserDto>();
 
 
             CreateMap<BookDto, Book>();
@@ -21,6 +22,7 @@ namespace LibraryAppRestapi.Helper
             CreateMap<StudentDto, Student>();
             CreateMap<PublisherDto, Publisher>();
             CreateMap<IssueRecordDto, IssueRecord>();
+            CreateMap<UserDto, User>();
         }
     }
 }

@@ -24,11 +24,12 @@ namespace LibraryAppRestapi.Controllers
         [ProducesResponseType(200, Type = typeof(IEnumerable<Publisher>))]
         public IActionResult GetPublishers()
         {
-            var publishers = _mapper.Map<List<PublisherDto>>(_publisherRepository.GetPublishers());
-
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
+            var publishers = _mapper.Map<List<PublisherDto>>(_publisherRepository.GetPublishers());
+
+          
             return Ok(publishers);
         }
 
@@ -41,10 +42,11 @@ namespace LibraryAppRestapi.Controllers
             if (!_publisherRepository.PublisherExists(pubId))
                 return NotFound();
 
-            var publisher = _mapper.Map<PublisherDto>(_publisherRepository.GetPublisher(pubId));
-
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
+
+            var publisher = _mapper.Map<PublisherDto>(_publisherRepository.GetPublisher(pubId));
+
 
             return Ok(publisher);
         }
@@ -52,12 +54,13 @@ namespace LibraryAppRestapi.Controllers
         public IActionResult GetPublisherByPubName([FromQuery] string pubName)
         {
 
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
             var publisher = _mapper.Map<PublisherDto>(_publisherRepository.GetPublisher(pubName));
 
           
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+           
 
             return Ok(publisher);
         }
@@ -67,11 +70,11 @@ namespace LibraryAppRestapi.Controllers
         [ProducesResponseType(400)]
         public IActionResult GetBooksByPublisherId(int pubId)
         {
-
-            var books = _mapper.Map<List<BookDto>>(_publisherRepository.GetBooksByPublisher(pubId));
-
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
+            var books = _mapper.Map<List<BookDto>>(_publisherRepository.GetBooksByPublisher(pubId));
+
+           
 
             return Ok(books);
         }
@@ -138,12 +141,12 @@ namespace LibraryAppRestapi.Controllers
             {
                 return NotFound();
             }
-
-          
-            var pubToDelete = _publisherRepository.GetPublisher(pubId);
-
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
+
+            var pubToDelete = _publisherRepository.GetPublisher(pubId);
+
+         
 
 
 

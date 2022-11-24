@@ -15,6 +15,7 @@ namespace LibraryAppRestapi.Data
         public DbSet<Publisher> Publishers { get; set; }
         public DbSet<Student> Students { get; set; }
         public DbSet<IssueRecord> IssueRecords { get; set; }
+        public DbSet<User> Users { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<BookAuthor>()
