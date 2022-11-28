@@ -4,7 +4,7 @@ namespace LibraryAppRestapi.IRepository
 {
     public interface  IPublisherRepository
     {
-        ICollection<Publisher> GetPublishers();
+       /* ICollection<Publisher> GetPublishers();
         Publisher GetPublisher(int pubId);
         Publisher GetPublisher(string name);
 
@@ -13,6 +13,6 @@ namespace LibraryAppRestapi.IRepository
         bool CreatePublisher(Publisher publisher);
         bool UpdatePublisher(Publisher publisher);
         bool DeletePublisher(Publisher pubId);
-        bool Save();
+        bool Save();*/
     }
 }

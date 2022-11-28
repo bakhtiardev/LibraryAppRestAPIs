@@ -2,7 +2,7 @@
 
 namespace LibraryAppRestapi.IRepository
 {
-    public interface IAuthorRepository
+    public interface IAuthorRepository : IRepository<Author>
     {
         ICollection<Author> GetAuthors();
         Author GetAuthor(int id);

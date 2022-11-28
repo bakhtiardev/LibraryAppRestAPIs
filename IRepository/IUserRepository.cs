@@ -2,9 +2,9 @@
 
 namespace LibraryAppRestapi.IRepository
 {
-    public interface IUserRepository
+    public interface IUserRepository : IRepository<User>
     {
-        ICollection<User> GetUsers();
+/*        ICollection<User> GetUsers();
         User GetUser(int id);
 
       
@@ -13,6 +13,6 @@ namespace LibraryAppRestapi.IRepository
         bool UpdateUser(User user);
         bool DeleteUser(User user);
         bool UserExists(int id);
-        bool Save();
+        bool Save();*/
     }
 }

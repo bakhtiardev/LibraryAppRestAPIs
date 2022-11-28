@@ -5,7 +5,7 @@ namespace LibraryAppRestapi.IRepository
 {
     public interface IBookRepository
     {
-        ICollection<Book> GetBooks();
+      /*  ICollection<Book> GetBooks();
 
         Book GetBook(int id);
         Book GetBook(string name);
@@ -16,6 +16,6 @@ namespace LibraryAppRestapi.IRepository
         bool UpdateBook(int authorId, int studentId,Book book);
 
         bool DeleteBook(Book Book);
-        bool Save();
+        bool Save();*/
     }
 }

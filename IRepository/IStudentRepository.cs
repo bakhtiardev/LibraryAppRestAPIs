@@ -5,7 +5,7 @@ namespace LibraryAppRestapi.IRepository
 {
     public interface IStudentRepository
     {
-        ICollection<Student> GetStudents();
+        /*ICollection<Student> GetStudents();
         Student GetStudent(int id);
         Student GetStudent(string name);
         ICollection<Student> GetStudentsByBook(int bookId);
@@ -14,7 +14,7 @@ namespace LibraryAppRestapi.IRepository
         bool CreateStudent(int bookId, Student student);
         bool UpdateStudent(int bookId, Student student);
         bool DeleteStudent(Student student);
-        bool Save();
+        bool Save();*/
        
     }
 }
