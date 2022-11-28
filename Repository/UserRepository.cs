@@ -13,7 +13,9 @@ namespace LibraryAppRestapi.Repository
         }
         public UserRepository(ApplicationDbContext context) : base(context)
         {
+
         }
+        
         /*  private readonly ApplicationDbContext _context;
 
           public UserRepository(ApplicationDbContext context)

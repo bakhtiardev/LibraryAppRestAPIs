@@ -5,6 +5,7 @@ using LibraryAppRestapi.Dto;
 using LibraryAppRestapi.Models;
 using LibraryAppRestapi.Repository;
 using System.Diagnostics.Metrics;
+using LibraryAppRestapi.UnitOfWorkk;
 
 namespace LibraryAppRestapi.Controllers
 {
@@ -12,12 +13,12 @@ namespace LibraryAppRestapi.Controllers
     [ApiController]
     public class StudentController : Controller
     {
-        private readonly IStudentRepository _studentRepository;
-        private IMapper _mapper;
+        private readonly IUnitOfWork _repository;
+        private readonly IMapper _mapper;
 
-        public StudentController(IStudentRepository studentRepository, IMapper mapper)
+        public StudentController(IUnitOfWork repository, IMapper mapper)
         {
-            _studentRepository = studentRepository;
+            _repository = repository;
             _mapper = mapper;
         }
 
@@ -27,135 +28,171 @@ namespace LibraryAppRestapi.Controllers
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-            var students = _mapper.Map<List<StudentDto>>(_studentRepository.GetStudents());
+            var students = _mapper.Map<List<StudentDto>>(_repository.Students.GetAll());
 
-           
+
 
             return Ok(students);
         }
-
         [HttpGet("{studentId}")]
         [ProducesResponseType(200, Type = typeof(Student))]
         [ProducesResponseType(400)]
         public IActionResult GetStudent(int studentId)
         {
-            if (!_studentRepository.StudentExists(studentId))
-                return NotFound();
+
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var book = _mapper.Map<StudentDto>(_studentRepository.GetStudent(studentId));
+            var book = _mapper.Map<StudentDto>(_repository.Students.Get(studentId));
 
-           
             return Ok(book);
         }
-        [HttpGet("student/{bookId}")]
-        [ProducesResponseType(200, Type = typeof(Student))]
-        [ProducesResponseType(400)]
-        public IActionResult GetStudentByBookId(int bookId)
-        {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            var student = _mapper.Map<List<StudentDto>>(_studentRepository.GetStudentsByBook(bookId));
-
-            
-
-            return Ok(student);
-        }
-        [HttpGet("book/{studentId}")]
-        [ProducesResponseType(200, Type = typeof(IEnumerable<Book>))]
-        [ProducesResponseType(400)]
-        public IActionResult GetBooksByStudentId(int studentId)
-        {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-            var books = _mapper.Map<List<BookDto>>(_studentRepository.GetBooksByStudent(studentId));
-          
-
-            return Ok(books);
-        }
-
-        [HttpPost]
-        [ProducesResponseType(204)]
-        [ProducesResponseType(400)]
-        public IActionResult CreateStudent([FromQuery]int bookId, [FromBody] StudentDto student)
-        {
-            if (student == null)
-                return BadRequest(ModelState);
-
-            var check = _studentRepository.GetStudent(student.Name);
-
-            if(check != null)
-            {
-                ModelState.AddModelError("", "student already exists!");
-                return StatusCode(403,ModelState);
-            }
-
-            var mapStudent = _mapper.Map<Student>(student);
 
 
-            if(!_studentRepository.CreateStudent(bookId, mapStudent))
-            {
-                ModelState.AddModelError("", "something went wrond in insertion");
-                return StatusCode(500,ModelState);
-            }
+        //private readonly IStudentRepository _studentRepository;
+        //private IMapper _mapper;
 
-            return Ok("sucessfully added");
-        }
-        [HttpPut("{studentId}")]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(204)]
-        [ProducesResponseType(404)]
-        public IActionResult UpdateStudent(int studentId,[FromQuery]int bookId, [FromBody] StudentDto updateStudent)
-        {
-            if (updateStudent == null)
-                return BadRequest(ModelState);
+        //public StudentController(IStudentRepository studentRepository, IMapper mapper)
+        //{
+        //    _studentRepository = studentRepository;
+        //    _mapper = mapper;
+        //}
 
-            if (studentId != updateStudent.Id)
-                return BadRequest(ModelState);
-
-            if (!_studentRepository.StudentExists(studentId))
-                return NotFound();
-
-            if (!ModelState.IsValid)
-                return BadRequest();
-
-            var studentMap = _mapper.Map<Student>(updateStudent);
-
-            if (!_studentRepository.UpdateStudent(bookId,studentMap))
-            {
-                ModelState.AddModelError("", "Something went wrong updating student");
-                return StatusCode(500, ModelState);
-            }
-
-            return NoContent();
-        }
-        [HttpDelete("{studentId}")]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(204)]
-        [ProducesResponseType(404)]
-        public IActionResult DeleteStudent(int studentId)
-        {
-            if (!_studentRepository.StudentExists(studentId))
-            {
-                return NotFound();
-            }
-
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-            var studentToDelte = _studentRepository.GetStudent(studentId);
-
-          
+        //[HttpGet]
+        //[ProducesResponseType(200, Type = typeof(IEnumerable<Student>))]
+        //public IActionResult GetStudents()
+        //{
+        //    if (!ModelState.IsValid)
+        //        return BadRequest(ModelState);
+        //    var students = _mapper.Map<List<StudentDto>>(_studentRepository.GetStudents());
 
 
 
-            if (!_studentRepository.DeleteStudent(studentToDelte))
-            {
-                ModelState.AddModelError("", "Something went wrong deleting student");
-            }
+        //    return Ok(students);
+        //}
 
-            return Ok("Delete successful");
-        }
+        //[HttpGet("{studentId}")]
+        //[ProducesResponseType(200, Type = typeof(Student))]
+        //[ProducesResponseType(400)]
+        //public IActionResult GetStudent(int studentId)
+        //{
+        //    if (!_studentRepository.StudentExists(studentId))
+        //        return NotFound();
+        //    if (!ModelState.IsValid)
+        //        return BadRequest(ModelState);
+
+        //    var book = _mapper.Map<StudentDto>(_studentRepository.GetStudent(studentId));
+
+
+        //    return Ok(book);
+        //}
+        //[HttpGet("student/{bookId}")]
+        //[ProducesResponseType(200, Type = typeof(Student))]
+        //[ProducesResponseType(400)]
+        //public IActionResult GetStudentByBookId(int bookId)
+        //{
+        //    if (!ModelState.IsValid)
+        //        return BadRequest(ModelState);
+
+        //    var student = _mapper.Map<List<StudentDto>>(_studentRepository.GetStudentsByBook(bookId));
+
+
+
+        //    return Ok(student);
+        //}
+        //[HttpGet("book/{studentId}")]
+        //[ProducesResponseType(200, Type = typeof(IEnumerable<Book>))]
+        //[ProducesResponseType(400)]
+        //public IActionResult GetBooksByStudentId(int studentId)
+        //{
+        //    if (!ModelState.IsValid)
+        //        return BadRequest(ModelState);
+        //    var books = _mapper.Map<List<BookDto>>(_studentRepository.GetBooksByStudent(studentId));
+
+
+        //    return Ok(books);
+        //}
+
+        //[HttpPost]
+        //[ProducesResponseType(204)]
+        //[ProducesResponseType(400)]
+        //public IActionResult CreateStudent([FromQuery]int bookId, [FromBody] StudentDto student)
+        //{
+        //    if (student == null)
+        //        return BadRequest(ModelState);
+
+        //    var check = _studentRepository.GetStudent(student.Name);
+
+        //    if(check != null)
+        //    {
+        //        ModelState.AddModelError("", "student already exists!");
+        //        return StatusCode(403,ModelState);
+        //    }
+
+        //    var mapStudent = _mapper.Map<Student>(student);
+
+
+        //    if(!_studentRepository.CreateStudent(bookId, mapStudent))
+        //    {
+        //        ModelState.AddModelError("", "something went wrond in insertion");
+        //        return StatusCode(500,ModelState);
+        //    }
+
+        //    return Ok("sucessfully added");
+        //}
+        //[HttpPut("{studentId}")]
+        //[ProducesResponseType(400)]
+        //[ProducesResponseType(204)]
+        //[ProducesResponseType(404)]
+        //public IActionResult UpdateStudent(int studentId,[FromQuery]int bookId, [FromBody] StudentDto updateStudent)
+        //{
+        //    if (updateStudent == null)
+        //        return BadRequest(ModelState);
+
+        //    if (studentId != updateStudent.Id)
+        //        return BadRequest(ModelState);
+
+        //    if (!_studentRepository.StudentExists(studentId))
+        //        return NotFound();
+
+        //    if (!ModelState.IsValid)
+        //        return BadRequest();
+
+        //    var studentMap = _mapper.Map<Student>(updateStudent);
+
+        //    if (!_studentRepository.UpdateStudent(bookId,studentMap))
+        //    {
+        //        ModelState.AddModelError("", "Something went wrong updating student");
+        //        return StatusCode(500, ModelState);
+        //    }
+
+        //    return NoContent();
+        //}
+        //[HttpDelete("{studentId}")]
+        //[ProducesResponseType(400)]
+        //[ProducesResponseType(204)]
+        //[ProducesResponseType(404)]
+        //public IActionResult DeleteStudent(int studentId)
+        //{
+        //    if (!_studentRepository.StudentExists(studentId))
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    if (!ModelState.IsValid)
+        //        return BadRequest(ModelState);
+        //    var studentToDelte = _studentRepository.GetStudent(studentId);
+
+
+
+
+
+        //    if (!_studentRepository.DeleteStudent(studentToDelte))
+        //    {
+        //        ModelState.AddModelError("", "Something went wrong deleting student");
+        //    }
+
+        //    return Ok("Delete successful");
+        //}
     }
 }

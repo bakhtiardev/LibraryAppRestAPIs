@@ -2,12 +2,32 @@
 using LibraryAppRestapi.Data;
 using LibraryAppRestapi.IRepository;
 using LibraryAppRestapi.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace LibraryAppRestapi.Repository
 {
-    public class IssueRecordRepository : IIssueRecordRepository
+    public class IssueRecordRepository : Repository<IssueRecord>,IIssueRecordRepository
     {
-        private readonly ApplicationDbContext _context;
+        public ApplicationDbContext ApplicationDbContext
+        {
+            get { return Context as ApplicationDbContext; }
+        }
+        public IssueRecordRepository(ApplicationDbContext context) : base(context)
+        {
+
+        }
+
+        public ICollection<IssueRecord> GetIssueRecordbyStudent(int studentId)
+        {
+            return ApplicationDbContext.IssueRecords.Where(p => p.StudentId == studentId).ToList();
+        }
+
+        public ICollection<IssueRecord> GetIssueRecordByBook(int bookId)
+        {
+            return ApplicationDbContext.IssueRecords.Where(p => p.BookId == bookId).ToList();
+        }
+
+        /*private readonly ApplicationDbContext _context;
 
         public IssueRecordRepository(ApplicationDbContext context)
         {
@@ -63,6 +83,6 @@ namespace LibraryAppRestapi.Repository
         {
             _context.Remove(record);
            return Save();
-        }
+        }*/
     }
 }

@@ -2,14 +2,20 @@
 
 namespace LibraryAppRestapi.UnitOfWorkk
 {
-    internal interface IUnitOfWork : IDisposable
+    public interface IUnitOfWork : IDisposable
     {
         IUserRepository Users { get; }
+        IAuthorRepository Authors { get; }
+        IBookRepository Books { get; }
+        IPublisherRepository Publishers { get; }
+        IIssueRecordRepository IssueRecords { get; }
+        IStudentRepository Students { get; }
+
         /*ITeacherRepository Teachers { get; }
         ISubjectRepository Subjects { get; }
         IGroupRepository Groups { get; }
         IMarkRepository Marks { get; }
 */
-        int Complete();
+        bool Complete();
     }
 }

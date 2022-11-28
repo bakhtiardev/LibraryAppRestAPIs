@@ -9,7 +9,7 @@ namespace LibraryAppRestapi.IRepository
         IEnumerable<TEntity> GetAll();
         IEnumerable<TEntity> Find(Expression<Func<TEntity, bool>> predicate);
 
-         
+       
         //Add Entity Methods
         void Add(TEntity entity);
         //Update Entity

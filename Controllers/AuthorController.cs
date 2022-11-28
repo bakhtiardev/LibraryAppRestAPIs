@@ -3,6 +3,7 @@ using LibraryAppRestapi.Dto;
 using LibraryAppRestapi.IRepository;
 using LibraryAppRestapi.Models;
 using LibraryAppRestapi.Repository;
+using LibraryAppRestapi.UnitOfWorkk;
 using Microsoft.AspNetCore.Mvc;
 using System;
 
@@ -12,15 +13,15 @@ namespace LibraryAppRestapi.Controllers
     [ApiController]
     public class AuthorController : Controller
     {
-        private readonly IAuthorRepository _authorRepository;
-        private readonly IBookRepository _bookRepository;
+        private readonly IUnitOfWork _repository;
         private readonly IMapper _mapper;
 
-        public AuthorController(IAuthorRepository authorRepository,IBookRepository bookRepository, IMapper mapper)
+        public AuthorController(IUnitOfWork repository, IMapper mapper)
         {
-            _authorRepository = authorRepository;
-            //_reviewRepository = reviewRepository;
-            _bookRepository= bookRepository;
+            //_authorRepository = authorRepository;
+            ////_reviewRepository = reviewRepository;
+            //_bookRepository = bookRepository;
+            _repository = repository;
             _mapper = mapper;
         }
 
@@ -31,7 +32,7 @@ namespace LibraryAppRestapi.Controllers
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-            var authors = _mapper.Map<List<AuthorDto>>(_authorRepository.GetAuthors());
+            var authors = _mapper.Map<List<AuthorDto>>(_repository.Authors.GetAll());
 
 
             return Ok(authors);
@@ -45,13 +46,11 @@ namespace LibraryAppRestapi.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            if (!_authorRepository.AuhorExists(authorId))
+
+            var author = _mapper.Map<AuthorDto>(_repository.Authors.Get(authorId));
+
+            if(author == null)
                 return NotFound();
-
-
-            var author = _mapper.Map<AuthorDto>(_authorRepository.GetAuthor(authorId));
-
-
 
             return Ok(author);
         }
@@ -64,14 +63,12 @@ namespace LibraryAppRestapi.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var books = _mapper.Map<List<BookDto>>(_authorRepository.GetBookByAuhtor(authorId));
-
-           
+            var books = _mapper.Map<List<BookDto>>(_repository.Authors.GetBookByAuthor(authorId));
 
             return Ok(books);
         }
         [HttpPost]
-        
+
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         public IActionResult CreateAuthor([FromQuery] int bookId, [FromBody] AuthorDto author)
@@ -79,19 +76,9 @@ namespace LibraryAppRestapi.Controllers
             if (author == null)
                 return BadRequest(ModelState);
 
-            var checkAuth = _authorRepository.GetAuthors()
-                .Where(p => p.AuthorName.Trim().ToLower().Equals(author.AuthorName.Trim().ToLower()))
-                .FirstOrDefault();
-
-            if(checkAuth!=null)
-            {
-                ModelState.AddModelError("", "Author already exists");
-                return StatusCode(422,ModelState);
-            }
-
             var authMap = _mapper.Map<Author>(author);
-            
-            if (!_authorRepository.CreateAuthor(bookId,authMap))
+
+            if (!_repository.Authors.CreateAuthor(bookId, authMap))
             {
                 ModelState.AddModelError("", "Something went wrong while insertion");
                 return StatusCode(500, ModelState);
@@ -100,6 +87,18 @@ namespace LibraryAppRestapi.Controllers
 
             return Ok("Successfully created");
 
+            //var checkAuth = _authorRepository.GetAll()
+            //    .Where(p => p.AuthorName.Trim().ToLower().Equals(author.AuthorName.Trim().ToLower()))
+            //    .FirstOrDefault();
+
+            //if (checkAuth != null)
+            //{
+            //    ModelState.AddModelError("", "Author already exists");
+            //    return StatusCode(422, ModelState);
+            //}
+
+
+
         }
         [HttpPut("{authorId}")]
 
@@ -107,21 +106,15 @@ namespace LibraryAppRestapi.Controllers
         [ProducesResponseType(400)]
         public IActionResult UpdateAuthor(int authorId, [FromBody] AuthorDto author)
         {
-            if (author == null)
+            if (author == null || authorId!=author.Id || !ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            if (authorId != author.Id)
-                return BadRequest(ModelState);
-
-            if (!_authorRepository.AuhorExists(authorId))
-                return NotFound();
-
-            if (!ModelState.IsValid)
-                return BadRequest();
+        
 
             var authorMap = _mapper.Map<Author>(author);
-            
-            if (!_authorRepository.UpdateAuthor( authorMap))
+
+            _repository.Authors.Update(authorMap);
+            if(_repository.Complete())
             {
                 ModelState.AddModelError("", "Something went wrong updating author");
                 return StatusCode(500, ModelState);
@@ -136,19 +129,16 @@ namespace LibraryAppRestapi.Controllers
         [ProducesResponseType(404)]
         public IActionResult DeleteAuthor(int authorId)
         {
-            if (!_authorRepository.AuhorExists(authorId))
-            {
-                return NotFound();
-            }
-
-            var authorToDelete = _authorRepository.GetAuthor(authorId);
-
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
+            var authorToDelete = _repository.Authors.Get(authorId);
 
-            if (!_authorRepository.DeleteAuthor(authorToDelete))
+
+            _repository.Authors.Remove(authorToDelete);
+            if(!_repository.Complete())
             {
                 ModelState.AddModelError("", "Something went wrong deleting author");
+                return StatusCode(500,ModelState);
             }
 
             return Ok("Delete successful");

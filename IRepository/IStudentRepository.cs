@@ -3,8 +3,9 @@ using LibraryAppRestapi.Models;
 
 namespace LibraryAppRestapi.IRepository
 {
-    public interface IStudentRepository
+    public interface IStudentRepository : IRepository<Student>
     {
+        ICollection<Student> GetStudentsByBook(int bookId);
         /*ICollection<Student> GetStudents();
         Student GetStudent(int id);
         Student GetStudent(string name);
@@ -15,6 +16,6 @@ namespace LibraryAppRestapi.IRepository
         bool UpdateStudent(int bookId, Student student);
         bool DeleteStudent(Student student);
         bool Save();*/
-       
+
     }
 }

@@ -1,13 +1,28 @@
 ﻿using LibraryAppRestapi.Data;
 using LibraryAppRestapi.IRepository;
 using LibraryAppRestapi.Models;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Client;
 
 namespace LibraryAppRestapi.Repository
 {
-    public class PublisherRepository : IPublisherRepository
+    public class PublisherRepository : Repository<Publisher> ,IPublisherRepository
     {
-        private readonly ApplicationDbContext _context;
+        public ApplicationDbContext ApplicationDbContext
+        {
+            get { return Context as ApplicationDbContext; }
+        }
+        public PublisherRepository(ApplicationDbContext context) : base(context)
+        {
+
+        }
+
+        public ICollection<Book> GetBooksByPublisher(int pubId)
+        {
+            return ApplicationDbContext.Books.Where(p => p.PublisherId == pubId).ToList();
+        }
+
+        /*private readonly ApplicationDbContext _context;
         public PublisherRepository( ApplicationDbContext context)
         {
             _context = context;
@@ -59,6 +74,7 @@ namespace LibraryAppRestapi.Repository
         {
             _context.Remove(publisher);
             return Save();
-        }
+        }*/
+
     }
 }

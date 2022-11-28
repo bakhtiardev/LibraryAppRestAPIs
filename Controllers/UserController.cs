@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using LibraryAppRestapi.Dto;
 using LibraryAppRestapi.IRepository;
+using LibraryAppRestapi.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LibraryAppRestapi.Controllers
@@ -8,15 +10,26 @@ namespace LibraryAppRestapi.Controllers
     [ApiController]
     public class UserController : Controller
     {
-        private readonly IUserRepository userRepository;
-        private readonly IMapper _mapper;
+        private readonly IUserRepository _userRepository;
+        private IMapper _mapper;
+
         public UserController(IUserRepository userRepository, IMapper mapper)
         {
-            this.userRepository = userRepository;
+            _userRepository = userRepository;
             _mapper = mapper;
         }
 
-        //[HttpPost("register")]
+        [HttpGet]
+        [ProducesResponseType(200, Type = typeof(IEnumerable<User>))]
+        public IActionResult GetUsers()
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+            var users = _mapper.Map<List<UserDto>>(_userRepository.GetAll());
 
+
+
+            return Ok(users);
+        }
     }
 }
