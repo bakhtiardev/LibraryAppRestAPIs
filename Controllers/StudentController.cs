@@ -29,11 +29,9 @@ namespace LibraryAppRestapi.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
             var students = _mapper.Map<List<StudentDto>>(_repository.Students.GetAll());
-
-
-
             return Ok(students);
         }
+
         [HttpGet("{studentId}")]
         [ProducesResponseType(200, Type = typeof(Student))]
         [ProducesResponseType(400)]
@@ -47,7 +45,86 @@ namespace LibraryAppRestapi.Controllers
 
             return Ok(book);
         }
+        [HttpGet("student/{bookId}")]
+        [ProducesResponseType(200, Type = typeof(Student))]
+        [ProducesResponseType(400)]
+        public IActionResult GetStudentByBookId(int bookId)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
+            var student = _mapper.Map<List<StudentDto>>(_repository.Students.GetStudentsByBook(bookId));
+
+
+
+            return Ok(student);
+        }
+        [HttpPost]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        public IActionResult CreateStudent([FromQuery] int bookId, [FromBody] StudentDto student)
+        {
+            if (student == null)
+                return BadRequest(ModelState);
+
+
+            var mapStudent = _mapper.Map<Student>(student);
+
+            if (!_repository.Students.CreateStudent(bookId, mapStudent))
+            {
+                ModelState.AddModelError("", "something went wrong in insertion");
+                return StatusCode(500, ModelState);
+            }
+
+            return Ok("sucessfully added");
+        }
+
+        [HttpPut("{studentId}")]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(404)]
+        public IActionResult UpdateStudent(int studentId, [FromBody] StudentDto updateStudent)
+        {
+            if (updateStudent == null || studentId != updateStudent.Id|| !ModelState.IsValid)
+                return BadRequest(ModelState);
+
+           
+
+            var studentMap = _mapper.Map<Student>(updateStudent);
+            _repository.Students.Update(studentMap);
+            if (!_repository.Complete())
+            {
+                ModelState.AddModelError("", "Something went wrong updating student");
+                return StatusCode(500, ModelState);
+            }
+
+            return Ok("Update Successful");
+
+        }
+        [HttpDelete("{studentId}")]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(404)]
+        public IActionResult DeleteStudent(int studentId)
+        {
+            
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+            var studentToDelte = _repository.Students.Get(studentId);
+
+            if (studentToDelte == null)
+                return NotFound();
+            _repository.Students.Remove(studentToDelte);
+
+
+            if (!_repository.Complete())
+            {
+                ModelState.AddModelError("", "Something went wrong deleting student");
+            }
+
+            return Ok("Delete successful");
+        }
 
         //private readonly IStudentRepository _studentRepository;
         //private IMapper _mapper;

@@ -63,7 +63,7 @@ namespace LibraryAppRestapi.Controllers
 
             if (books != null)
             {
-                ModelState.AddModelError("", "Owner already exists");
+                ModelState.AddModelError("", "Book already exists");
                 return StatusCode(422, ModelState);
             }
 
@@ -77,30 +77,29 @@ namespace LibraryAppRestapi.Controllers
                 ModelState.AddModelError("", "Something went wrong while savin");
                 return StatusCode(500, ModelState);
             }
-
             return Ok("Successfully created");
         }
+
         [HttpPut("{bookId}")]
         [ProducesResponseType(400)]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
         public IActionResult UpdateBook(int bookId,
-            [FromQuery] int authorId, [FromQuery] int studentId,
+            //[FromQuery] int authorId, [FromQuery] int studentId,
             [FromBody] BookDto updatedBook)
         {
             
 
-            if (bookId != updatedBook.Id || updatedBook==null)
+            if (bookId != updatedBook.Id || updatedBook==null|| !ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            if (!ModelState.IsValid)
-                return BadRequest();
 
             var bookMap = _mapper.Map<Book>(updatedBook);
             _repository.Books.Update(bookMap);
+
             if (!_repository.Complete())
             {
-                ModelState.AddModelError("", "Something went wrong updating owner");
+                ModelState.AddModelError("", "Something went wrong updating book");
                 return StatusCode(500, ModelState);
             }
 

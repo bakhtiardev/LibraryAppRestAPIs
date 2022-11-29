@@ -42,8 +42,12 @@ namespace LibraryAppRestapi.Controllers
                 return BadRequest(ModelState);
 
             var publisher = _mapper.Map<PublisherDto>(_repository.Publishers.Get(pubId));
+            
+            if(publisher != null)
+                return Ok(publisher);
 
-            return Ok(publisher);
+            return NotFound();
+
         }
         [HttpGet("book/{pubId}")]
         [ProducesResponseType(200, Type = typeof(IEnumerable<Book>))]
@@ -77,6 +81,7 @@ namespace LibraryAppRestapi.Controllers
 
             return Ok("Successfuly created");
         }
+
         [HttpPut("{publisherId}")]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
@@ -89,6 +94,8 @@ namespace LibraryAppRestapi.Controllers
 
             var mapUpdate = _mapper.Map<Publisher>(updatePublisher);
             _repository.Publishers.Update(mapUpdate);
+
+
             if (!_repository.Complete())
             {
                 ModelState.AddModelError("", "somthing went wrong");

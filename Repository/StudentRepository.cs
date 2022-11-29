@@ -20,7 +20,22 @@ namespace LibraryAppRestapi.Repository
         {
             return ApplicationDbContext.IssueRecords.Where(p => p.BookId == bookId).Select(c => c.Student).ToList();
         }
+        public bool CreateStudent(int bookId, Student student)
+        {
+            var bookEntity = ApplicationDbContext.Books.Where(p => p.Id == bookId).FirstOrDefault();
+            var studentBook = new IssueRecord()
+            {
+                IssueDate = DateTime.Now,
+                Book = bookEntity,
+                Student = student,
 
+            };
+
+            ApplicationDbContext.Add(studentBook);
+            ApplicationDbContext.Add(student);
+
+            return ApplicationDbContext.SaveChanges() > 0 ? true : false;
+        }
         //private readonly ApplicationDbContext _context;
         //public StudentRepository(ApplicationDbContext context)
         //{
@@ -56,22 +71,7 @@ namespace LibraryAppRestapi.Repository
         //    return _context.Students.Any(p => p.Id == studentId);
         //}
 
-        //public bool CreateStudent(int bookId, Student student)
-        //{
-        //    var bookEntity=_context.Books.Where(p=>p.Id==bookId).FirstOrDefault();
-        //    var studentBook = new IssueRecord()
-        //    {
-        //        IssueDate = DateTime.Now,
-        //        Book = bookEntity,
-        //        Student = student,
 
-        //    };
-
-        //    _context.Add(studentBook);
-        //    _context.Add(student);
-
-        //    return Save();
-        //}
         //public bool UpdateStudent(int bookId, Student updateStudent)
         //{
 

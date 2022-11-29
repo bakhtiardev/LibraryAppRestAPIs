@@ -2,6 +2,7 @@
 using LibraryAppRestapi.Dto;
 using LibraryAppRestapi.IRepository;
 using LibraryAppRestapi.Models;
+using LibraryAppRestapi.UnitOfWorkk;
 
 namespace LibraryAppRestapi.Helper
 {                                       
@@ -15,7 +16,7 @@ namespace LibraryAppRestapi.Helper
             CreateMap<Publisher,PublisherDto>();
             CreateMap<IssueRecord, IssueRecordDto>();
             CreateMap<User, UserDto>();
- 
+            CreateMap<IUnitOfWork, UnitOfWork>();
 
             CreateMap<BookDto, Book>();
             CreateMap<AuthorDto, Author>();
@@ -23,6 +24,7 @@ namespace LibraryAppRestapi.Helper
             CreateMap<PublisherDto, Publisher>();
             CreateMap<IssueRecordDto, IssueRecord>();
             CreateMap<UserDto, User>();
+            CreateMap<UnitOfWork, IUnitOfWork>();
         }
     }
 }

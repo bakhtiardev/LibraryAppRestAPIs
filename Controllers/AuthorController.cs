@@ -101,26 +101,27 @@ namespace LibraryAppRestapi.Controllers
 
         }
         [HttpPut("{authorId}")]
-
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         public IActionResult UpdateAuthor(int authorId, [FromBody] AuthorDto author)
         {
-            if (author == null || authorId!=author.Id || !ModelState.IsValid)
+            if (author == null || authorId != author.Id)
                 return BadRequest(ModelState);
 
-        
 
-            var authorMap = _mapper.Map<Author>(author);
+            var mapUpdate = _mapper.Map<Author>(author);
 
-            _repository.Authors.Update(authorMap);
-            if(_repository.Complete())
+            _repository.Authors.Update(mapUpdate);
+
+
+            if (!_repository.Complete())
             {
-                ModelState.AddModelError("", "Something went wrong updating author");
+                ModelState.AddModelError("", "somthing went wrong updating Author");
                 return StatusCode(500, ModelState);
-            }
 
-            return Ok("Update successful");
+            }
+            return Ok("Update Successful");
 
         }
         [HttpDelete("{authorId}")]
@@ -131,10 +132,14 @@ namespace LibraryAppRestapi.Controllers
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
+
             var authorToDelete = _repository.Authors.Get(authorId);
 
+            if (authorToDelete == null)
+                return NotFound();
 
             _repository.Authors.Remove(authorToDelete);
+
             if(!_repository.Complete())
             {
                 ModelState.AddModelError("", "Something went wrong deleting author");

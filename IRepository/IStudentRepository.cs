@@ -6,6 +6,7 @@ namespace LibraryAppRestapi.IRepository
     public interface IStudentRepository : IRepository<Student>
     {
         ICollection<Student> GetStudentsByBook(int bookId);
+        bool CreateStudent(int bookId, Student student);
         /*ICollection<Student> GetStudents();
         Student GetStudent(int id);
         Student GetStudent(string name);

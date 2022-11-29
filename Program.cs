@@ -4,6 +4,8 @@ using LibraryAppRestapi.IRepository;
 using Microsoft.EntityFrameworkCore;
 using LibraryAppRestapi.Repository;
 using System.Text.Json.Serialization;
+using LibraryAppRestapi.UnitOfWorkk;
+using LibraryAppRestapi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,12 +18,15 @@ builder.Services.AddControllers().AddJsonOptions(x =>
                 x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IBookRepository, BookRepository>();
 builder.Services.AddScoped<IStudentRepository, StudentRepository>();
 builder.Services.AddScoped<IAuthorRepository, AuthorRepository>();
 builder.Services.AddScoped<IPublisherRepository, PublisherRepository>();
 builder.Services.AddScoped<IIssueRecordRepository,IssueRecordRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(
     );
