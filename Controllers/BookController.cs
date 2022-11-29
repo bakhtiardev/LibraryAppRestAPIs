@@ -119,6 +119,8 @@ namespace LibraryAppRestapi.Controllers
 
             var bookToDelte = _repository.Books.Get(bookId);
 
+            if(bookToDelte == null)
+                return NotFound();
 
             _repository.Books.Remove(bookToDelte);
 
