@@ -15,7 +15,17 @@ namespace LibraryAppRestapi.Repository
         {
 
         }
-        
+
+        public bool userExists(string username)
+        {
+            return ApplicationDbContext.Users.Any(c => c.Username.Equals(username));
+        }
+
+        public User Get(string username)
+        {
+            return ApplicationDbContext.Users.Where(c => c.Username.Equals(username)).FirstOrDefault();
+        }
+
         /*  private readonly ApplicationDbContext _context;
 
           public UserRepository(ApplicationDbContext context)
