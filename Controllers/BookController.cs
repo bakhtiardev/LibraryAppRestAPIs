@@ -61,6 +61,10 @@ namespace LibraryAppRestapi.Controllers
 
             var books = _repository.Books.GetBookTrimToUpper(bookCreate);
 
+
+
+
+
             if (books != null)
             {
                 ModelState.AddModelError("", "Book already exists");
@@ -70,9 +74,9 @@ namespace LibraryAppRestapi.Controllers
 
             var bookMap = _mapper.Map<Book>(bookCreate);
             bookMap.Publisher = _repository.Publishers.Get(pubId);
-            _repository.Books.CreateBook(authorId, studentId, bookMap);
+           
 
-            if (!_repository.Complete())
+            if (!_repository.Books.CreateBook(authorId, studentId, bookMap))
             {
                 ModelState.AddModelError("", "Something went wrong while savin");
                 return StatusCode(500, ModelState);
@@ -86,6 +90,7 @@ namespace LibraryAppRestapi.Controllers
         [ProducesResponseType(404)]
         public IActionResult UpdateBook(int bookId,
             //[FromQuery] int authorId, [FromQuery] int studentId,
+            [FromQuery] int pubId,
             [FromBody] BookDto updatedBook)
         {
             
@@ -95,6 +100,7 @@ namespace LibraryAppRestapi.Controllers
 
 
             var bookMap = _mapper.Map<Book>(updatedBook);
+            bookMap.Publisher = _repository.Publishers.Get(pubId);
             _repository.Books.Update(bookMap);
 
             if (!_repository.Complete())
@@ -132,6 +138,9 @@ namespace LibraryAppRestapi.Controllers
 
             return Ok("Delete successful");
         }
+
+
+
 
         //private readonly IBookRepository _bookRepository;
         //private readonly IPublisherRepository _publisherRepository;

@@ -19,7 +19,7 @@ namespace LibraryAppRestapi.Repository
 
         public Book GetBookTrimToUpper(BookDto bookCreate)
         {
-            return ApplicationDbContext.Books.Where(p => p.Title.Trim().ToUpper() == bookCreate.Title.TrimEnd().ToUpper()).FirstOrDefault();
+            return ApplicationDbContext.Books.Where(p => p.Title.Trim().ToUpper().Equals( bookCreate.Title.TrimEnd().ToUpper())).FirstOrDefault();
         }
         public bool CreateBook(int authorId, int studentId, Book book)
         {
