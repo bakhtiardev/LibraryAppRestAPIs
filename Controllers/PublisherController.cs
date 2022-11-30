@@ -4,6 +4,7 @@ using LibraryAppRestapi.IRepository;
 using LibraryAppRestapi.Models;
 using LibraryAppRestapi.Repository;
 using LibraryAppRestapi.UnitOfWorkk;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LibraryAppRestapi.Controllers
@@ -60,7 +61,7 @@ namespace LibraryAppRestapi.Controllers
 
             return Ok(books);
         }
-        [HttpPost]
+        [HttpPost, Authorize]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         public IActionResult CreatePublisher([FromBody] PublisherDto publisher)
@@ -105,7 +106,7 @@ namespace LibraryAppRestapi.Controllers
             return Ok("Update Successful");
 
         }
-        [HttpDelete("{pubId}")]
+        [HttpDelete("{pubId}"), Authorize]
         [ProducesResponseType(400)]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
