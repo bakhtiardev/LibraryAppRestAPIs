@@ -87,16 +87,7 @@ namespace LibraryAppRestapi.Controllers
 
             return Ok("Successfully created");
 
-            //var checkAuth = _authorRepository.GetAll()
-            //    .Where(p => p.AuthorName.Trim().ToLower().Equals(author.AuthorName.Trim().ToLower()))
-            //    .FirstOrDefault();
-
-            //if (checkAuth != null)
-            //{
-            //    ModelState.AddModelError("", "Author already exists");
-            //    return StatusCode(422, ModelState);
-            //}
-
+            
 
 
         }

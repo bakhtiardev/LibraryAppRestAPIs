@@ -4,7 +4,8 @@ namespace LibraryAppRestapi.IRepository
 {
     public interface IUserRepository : IRepository<User>
     {
-/*        ICollection<User> GetUsers();
+
+/*      ICollection<User> GetUsers();
         User GetUser(int id);
 
       
