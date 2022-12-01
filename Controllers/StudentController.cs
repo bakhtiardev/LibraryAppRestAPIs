@@ -92,6 +92,7 @@ namespace LibraryAppRestapi.Controllers
 
             var studentMap = _mapper.Map<Student>(updateStudent);
             _repository.Students.Update(studentMap);
+
             if (!_repository.Complete())
             {
                 ModelState.AddModelError("", "Something went wrong updating student");
@@ -109,8 +110,8 @@ namespace LibraryAppRestapi.Controllers
         {
             
 
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+            //if (!ModelState.IsValid)
+            //    return BadRequest(ModelState);
             var studentToDelte = _repository.Students.Get(studentId);
 
             if (studentToDelte == null)

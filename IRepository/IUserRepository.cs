@@ -6,6 +6,9 @@ namespace LibraryAppRestapi.IRepository
     {
         bool userExists(string username);
         User Get(string username);
+
+
+
 /*      ICollection<User> GetUsers();
         User GetUser(int id);
 

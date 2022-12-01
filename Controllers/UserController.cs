@@ -131,8 +131,8 @@ namespace LibraryAppRestapi.Controllers
         [HttpDelete("{userId}")]
         public IActionResult DeleteUser(int userId)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+            //if (!ModelState.IsValid)
+            //    return BadRequest(ModelState);
             var userToDelete = _repository.Users.Get(userId);
 
             if (userToDelete == null)
