@@ -62,16 +62,21 @@ namespace LibraryAppRestapi.Controllers
         [HttpPost("login")]
         public ActionResult Login(UserDto request)
         {
-            
+            if (request.Username == null || request.Username == "")
+                return BadRequest(new { message = "Missing username" });
+
+            if (request.Password == null || request.Password == "")
+                return BadRequest(new { message = "Missing password" });
+
             if (!_repository.Users.userExists(request.Username))
             {
-                return BadRequest("User not found.");
+                return BadRequest(new { message="Username Not Found"});
             }
             var user = _repository.Users.Get(request.Username);
 
             if (!VerifyPasswordHash(request.Password, user.PasswordHash, user.PasswordSalt))
             {
-                return BadRequest("Wrong password.");
+                return BadRequest(new { message = "Wrong password" });
             }
 
             string token = CreateToken(user);

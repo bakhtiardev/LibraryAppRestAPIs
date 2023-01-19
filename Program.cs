@@ -13,7 +13,24 @@ using Microsoft.IdentityModel.Tokens;
 using Swashbuckle.AspNetCore.Filters;
 using System.Text;
 
+var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
 var builder = WebApplication.CreateBuilder(args);
+
+//cors
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(MyAllowSpecificOrigins,
+                          policy =>
+                          {
+                              policy.WithOrigins("http://localhost:5173/"
+                                                  )
+                                                  .AllowAnyOrigin()
+                                                  .AllowAnyMethod()
+                                                  .AllowAnyHeader()
+                                                  ;
+                          });
+});
 
 // Add services to the container.
 
@@ -93,7 +110,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseCors("NgOrigins");
+app.UseCors("_myAllowSpecificOrigins");
 
 app.UseHttpsRedirection();
 
